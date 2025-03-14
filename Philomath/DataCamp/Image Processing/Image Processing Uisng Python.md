@@ -8,20 +8,20 @@ Image processing involves performing operations on images and videos to:
 
 ## Applications
 Image processing is widely used in various fields, including:
-- Medical image analysis
-- Artificial intelligence
-- Image restoration and enhancement
-- Geospatial computing
-- Surveillance
-- Robotic vision
-- Automotive safety
+- **Medical Image Analysis**: Identifying diseases from X-rays, MRIs, and CT scans.
+- **Artificial Intelligence**: Training models for object detection, face recognition, and more.
+- **Image Restoration and Enhancement**: Removing noise and improving image quality.
+- **Geospatial Computing**: Processing satellite images for land classification and mapping.
+- **Surveillance**: Enhancing security footage for crime investigation.
+- **Robotic Vision**: Enabling robots to perceive their environment.
+- **Automotive Safety**: Lane detection and autonomous driving assistance.
 
 ## Purposes of Image Processing
-1. **Visualization** - Making invisible objects visible
-2. **Image Sharpening and Restoration** - Enhancing image quality
-3. **Image Retrieval** - Finding specific images
-4. **Measurement of Patterns** - Analyzing image patterns
-5. **Image Recognition** - Identifying objects within an image
+1. **Visualization** - Making invisible objects visible by enhancing image features.
+2. **Image Sharpening and Restoration** - Improving image clarity and removing distortions.
+3. **Image Retrieval** - Searching and identifying images in large datasets.
+4. **Measurement of Patterns** - Extracting meaningful patterns and shapes from images.
+5. **Image Recognition** - Identifying objects, faces, or handwritten text in an image.
 
 ## Introduction to OpenCV
 OpenCV (Open Source Computer Vision Library) is an open-source computer vision and machine learning library. It is designed for computational efficiency and real-time applications.
@@ -40,6 +40,11 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 ```
 
+- `cv2.imread()` loads an image from a file.
+- `cv2.imshow()` displays the image in a window.
+- `cv2.waitKey(0)` waits for a key press before closing the window.
+- `cv2.destroyAllWindows()` closes all OpenCV windows.
+
 ## Converting to Grayscale
 ```python
 gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -47,6 +52,8 @@ cv2.imshow('Grayscale Image', gray_image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 ```
+
+- Grayscale images reduce computational complexity by converting color images to a single channel.
 
 ## Image Resizing
 ```python
@@ -56,6 +63,8 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 ```
 
+- Resizing helps normalize image dimensions before processing.
+
 ## Edge Detection using Canny Algorithm
 ```python
 edges = cv2.Canny(image, 100, 200)
@@ -63,6 +72,8 @@ cv2.imshow('Edge Detection', edges)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 ```
+
+- The Canny algorithm detects edges by finding areas of rapid intensity change.
 
 ## Introduction to Scikit-Image
 Scikit-Image is another powerful Python library for image processing, offering:
@@ -86,6 +97,9 @@ grayscale = color.rgb2gray(original)
 rgb = color.gray2rgb(grayscale)
 ```
 
+- **RGB images** contain three color channels (Red, Green, Blue).
+- **Grayscale images** contain a single intensity channel.
+
 ## Visualizing Images
 ```python
 def show_image(image, title='Image', cmap_type='gray'):
@@ -94,6 +108,9 @@ def show_image(image, title='Image', cmap_type='gray'):
     plt.axis('off')
     plt.show()
 ```
+
+- `plt.imshow()` displays an image.
+- `plt.axis('off')` removes axis ticks for clarity.
 
 ## NumPy for Image Processing
 ### Loading Images as NumPy Arrays
@@ -110,23 +127,12 @@ green = image[:, :, 1]
 blue = image[:, :, 2]
 ```
 
+- Each pixel consists of three intensity values (R, G, B).
+
 ### Image Shape and Size
 ```python
 madrid_image.shape  # (height, width, channels)
 madrid_image.size  # Total number of pixels
-```
-
-### Flipping Images
-#### Vertically
-```python
-import numpy as np
-vertically_flipped = np.flipud(madrid_image)
-show_image(vertically_flipped, 'Vertically flipped image')
-```
-#### Horizontally
-```python
-horizontally_flipped = np.fliplr(madrid_image)
-show_image(horizontally_flipped, 'Horizontally flipped image')
 ```
 
 ## Histograms in Image Processing
@@ -135,8 +141,10 @@ show_image(horizontally_flipped, 'Horizontally flipped image')
 plt.hist(red.ravel(), bins=256)
 ```
 
+- Histograms visualize the distribution of pixel intensities.
+
 ## Thresholding
-Thresholding is used to separate an image into foreground and background by converting it into a binary format (black and white).
+Thresholding separates an image into foreground and background.
 
 ### Applying Thresholding
 ```python
@@ -146,55 +154,20 @@ show_image(image, 'Original')
 show_image(binary, 'Thresholded')
 ```
 
-### Inverted Thresholding
-```python
-inverted_binary = image <= thresh
-show_image(image, 'Original')
-show_image(inverted_binary, 'Inverted thresholded')
-```
-
-### Global vs. Local Thresholding
-- **Global Thresholding** is best for uniform backgrounds.
-- **Local (Adaptive) Thresholding** is used for uneven lighting conditions.
-
-#### Using Otsu's Method (Global Thresholding)
-```python
-from skimage.filters import threshold_otsu
-thresh = threshold_otsu(image)
-binary_global = image > thresh
-show_image(image, 'Original')
-show_image(binary_global, 'Global Thresholding')
-```
-
-#### Using Local Thresholding
-```python
-from skimage.filters import threshold_local
-block_size = 35
-local_thresh = threshold_local(text_image, block_size, offset=10)
-binary_local = text_image > local_thresh
-show_image(text_image, 'Original')
-show_image(binary_local, 'Local Thresholding')
-```
+- Pixels above the threshold become white, and others turn black.
 
 ## Filtering
-Filters help enhance images by:
-- Emphasizing or removing features
+Filters enhance images by:
+- Emphasizing features
 - Smoothing
 - Sharpening
-- Edge detection
+- Detecting edges
 
 ### Edge Detection using Sobel Filter
 ```python
 from skimage.filters import sobel
 edge_sobel = sobel(image_coins)
 plot_comparison(image_coins, edge_sobel, "Edge with Sobel")
-```
-
-### Gaussian Smoothing
-```python
-from skimage.filters import gaussian
-gaussian_image = gaussian(amsterdam_pic, multichannel=True)
-plot_comparison(amsterdam_pic, gaussian_image, "Blurred with Gaussian filter")
 ```
 
 ## Contrast Enhancement
@@ -206,13 +179,7 @@ show_image(image, 'Original')
 show_image(image_eq, 'Histogram equalized')
 ```
 
-### Adaptive Equalization (CLAHE)
-```python
-from skimage import exposure
-image_adapteq = exposure.equalize_adapthist(image, clip_limit=0.03)
-show_image(image, 'Original')
-show_image(image_adapteq, 'Adaptive equalized')
-```
+- Equalization enhances image contrast.
 
 ## Image Transformations
 ### Rotating Images
@@ -223,17 +190,9 @@ show_image(image, 'Original')
 show_image(image_rotated, 'Rotated 90 degrees clockwise')
 ```
 
-### Rescaling and Resizing
-```python
-from skimage.transform import rescale, resize
-image_rescaled = rescale(image, 1/4, anti_aliasing=True, multichannel=True)
-image_resized = resize(image, (400, 500), anti_aliasing=True)
-show_image(image, 'Resized image')
-```
-
 ## Morphological Operations
-- **Dilation** expands object boundaries
-- **Erosion** shrinks object boundaries
+- **Dilation** expands object boundaries.
+- **Erosion** shrinks object boundaries.
 
 ### Binary Erosion
 ```python
