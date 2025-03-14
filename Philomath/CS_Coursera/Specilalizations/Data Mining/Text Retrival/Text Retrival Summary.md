@@ -198,27 +198,101 @@ An index structure that maps words to document locations, enabling fast lookups.
 ### Used in
 Search engines, databases, and large-scale text retrieval systems.
 
+
 ## 6. Evaluation Metrics for Information Retrieval
 
 ### Definition
-Methods to assess retrieval performance.
+Evaluation metrics in information retrieval assess how effectively a system retrieves relevant documents in response to a query.
 
 ### Common Metrics
-- Precision
-- Recall
-- F1-score
-- Mean Average Precision (MAP)
-- NDCG (Normalized Discounted Cumulative Gain)
+#### 1. Precision
+Measures the proportion of retrieved documents that are relevant.
+```
+Precision = Relevant Retrieved Documents / Total Retrieved Documents
+```
+#### 2. Recall
+Measures the proportion of relevant documents that were successfully retrieved.
+```
+Recall = Relevant Retrieved Documents / Total Relevant Documents
+```
+#### 3. F1-score
+Harmonic mean of precision and recall, providing a balance between the two.
+```
+F1 = 2 * (Precision * Recall) / (Precision + Recall)
+```
+#### 4. Mean Average Precision (MAP)
+Computes the average precision for multiple queries and takes the mean.
+```python
+from sklearn.metrics import average_precision_score
+
+y_true = [0, 0, 1, 1, 1, 0, 1]
+y_scores = [0.1, 0.4, 0.35, 0.8, 0.9, 0.5, 0.95]
+
+map_score = average_precision_score(y_true, y_scores)
+print(f"MAP Score: {map_score}")
+```
+#### 5. NDCG (Normalized Discounted Cumulative Gain)
+Evaluates ranking quality by considering the order of retrieved documents.
+```python
+import numpy as np
+
+def dcg_at_k(relevance, k):
+    relevance = np.array(relevance)[:k]
+    return np.sum((2**relevance - 1) / np.log2(np.arange(2, len(relevance) + 2)))
+
+def ndcg_at_k(true_relevance, predicted_relevance, k):
+    idcg = dcg_at_k(sorted(true_relevance, reverse=True), k)
+    if idcg == 0:
+        return 0
+    return dcg_at_k(predicted_relevance, k) / idcg
+
+true_rel = [3, 2, 3, 0, 1, 2]
+pred_rel = [3, 2, 2, 1, 0, 3]
+print(f"NDCG Score: {ndcg_at_k(true_rel, pred_rel, 5)}")
+```
 
 ## 7. Feedback Mechanisms for Search Improvement
 
 ### Definition
-Systems that refine search results based on user interaction.
+Feedback mechanisms refine search results based on user interactions.
 
 ### Examples
-- Relevance feedback
-- Click-through rate analysis
-- Query expansion
+#### 1. Relevance Feedback
+Adjusts search results based on user-selected relevant documents.
+```python
+def update_query(query_vector, relevant_docs):
+    alpha = 1  # Weight for original query
+    beta = 0.75  # Weight for relevant documents
+    new_query = alpha * query_vector + beta * np.mean(relevant_docs, axis=0)
+    return new_query
+```
+#### 2. Click-through Rate Analysis
+Tracks user clicks to infer relevance.
+```python
+import pandas as pd
+
+data = pd.DataFrame({
+    'query': ['text retrieval', 'text retrieval'],
+    'doc_id': [1, 2],
+    'clicks': [10, 2]
+})
+data['relevance_score'] = data['clicks'] / data['clicks'].max()
+print(data)
+```
+#### 3. Query Expansion
+Expands queries based on synonyms or related terms.
+```python
+from nltk.corpus import wordnet
+
+def expand_query(query):
+    synonyms = set()
+    for syn in wordnet.synsets(query):
+        for lemma in syn.lemmas():
+            synonyms.add(lemma.name())
+    return list(synonyms)
+
+print(expand_query("search"))
+```
 
 ## 8. Parallel Indexing Using MapReduce
 
@@ -227,6 +301,23 @@ A distributed computing framework for processing large-scale indexing tasks.
 
 ### Usage
 Improves scalability and efficiency of search engine indexing.
+
+#### MapReduce Example for Indexing Documents
+```python
+from mrjob.job import MRJob
+
+class InvertedIndex(MRJob):
+    def mapper(self, _, line):
+        doc_id, text = line.split("\t")
+        for word in text.split():
+            yield word.lower(), doc_id
+
+    def reducer(self, word, doc_ids):
+        yield word, list(set(doc_ids))
+
+if __name__ == "__main__":
+    InvertedIndex.run()
+```
 
 ## 9. Future of Web Search
 
@@ -239,3 +330,5 @@ Improves scalability and efficiency of search engine indexing.
 ### Personalization and Privacy
 - Balancing customization with user data protection.
 
+---
+This document provides key insights into modern text retrieval techniques, including evaluation methods, feedback mechanisms, scalable indexing, and future trends.
