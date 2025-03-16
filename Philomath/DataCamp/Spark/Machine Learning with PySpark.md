@@ -45,13 +45,13 @@ Many machine learning models require numerical inputs. We use `StringIndexer` to
 ```python
 from pyspark.ml.feature import StringIndexer
 
-# Convert categorical labels into numerical indices
+# Convert categorical labels (e.g., species names) into numerical indices
 indexer = StringIndexer(inputCol="species", outputCol="label")
 iris_df = indexer.fit(iris_df).transform(iris_df)
 ```
 
 ### Feature Vector Assembly
-Models require a single column of numerical features. `VectorAssembler` combines multiple columns into a feature vector.
+Machine learning models require a single column containing all numerical features. `VectorAssembler` combines multiple feature columns into a single vector.
 ```python
 from pyspark.ml.feature import VectorAssembler
 
@@ -63,7 +63,7 @@ iris_df = assembler.transform(iris_df)
 ---
 
 ## Building a Machine Learning Pipeline
-A `Pipeline` automates the transformation and modeling process by chaining multiple steps together.
+A `Pipeline` automates the transformation and modeling process by chaining multiple steps together. This helps maintain a consistent workflow.
 ```python
 from pyspark.ml import Pipeline
 from pyspark.ml.classification import LogisticRegression
@@ -82,10 +82,10 @@ print("✅ Pipeline Created and Trained")
 ---
 
 ## Classification Models
-Classification predicts categorical labels based on input features.
+Classification models predict categorical labels based on input features.
 
 ### Decision Tree Classifier
-A Decision Tree is a hierarchical model used for classification.
+A Decision Tree is a hierarchical model used for classification. It splits data into branches based on feature values.
 ```python
 from pyspark.ml.classification import DecisionTreeClassifier
 
@@ -95,7 +95,7 @@ model = dt.fit(iris_df)
 ```
 
 ### Logistic Regression
-Logistic Regression predicts probabilities of categorical outcomes.
+Logistic Regression is used for binary and multi-class classification. It estimates probabilities using a logistic function.
 ```python
 # Initialize and train a Logistic Regression model
 lr = LogisticRegression(labelCol="label", featuresCol="features")
@@ -105,9 +105,10 @@ model = lr.fit(iris_df)
 ---
 
 ## Regression Models
-Regression predicts continuous values, such as prices or durations.
+Regression models predict continuous values, such as prices or durations.
 
 ### Linear Regression
+Linear Regression is a statistical method used to predict numerical values based on input features.
 ```python
 from pyspark.ml.regression import LinearRegression
 
@@ -117,17 +118,17 @@ model = lr.fit(iris_df)
 ```
 
 ### Feature Engineering
-New features can be created for better accuracy.
+Feature engineering involves creating new features to improve model accuracy.
 ```python
 from pyspark.ml.feature import Bucketizer
 
-# Bucketize a continuous variable into discrete bins
+# Bucketize (categorize) a continuous variable into discrete bins
 bucketizer = Bucketizer(splits=[0, 5, 10, 15], inputCol="sepal_length", outputCol="bucketed_sepal")
 iris_df = bucketizer.transform(iris_df)
 ```
 
 ### Regularization
-Regularization prevents overfitting.
+Regularization helps prevent overfitting by adding a penalty to large coefficients.
 ```python
 # Apply L2 regularization to a linear regression model
 lr = LinearRegression(featuresCol="features", labelCol="label", regParam=0.1)
@@ -152,7 +153,7 @@ print(f"Model Accuracy: {accuracy}")
 ---
 
 ## Hyperparameter Tuning
-Using `CrossValidator` and `ParamGridBuilder` to optimize model parameters.
+Hyperparameter tuning optimizes model performance by selecting the best parameters.
 ```python
 from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
 
@@ -168,7 +169,7 @@ model = crossval.fit(iris_df)
 
 ## Advanced Models
 ### Random Forest Classifier
-An ensemble learning method that improves accuracy.
+Random Forest is an ensemble learning method that improves accuracy by using multiple decision trees.
 ```python
 from pyspark.ml.classification import RandomForestClassifier
 
@@ -178,7 +179,7 @@ model = rf.fit(iris_df)
 ```
 
 ### Gradient-Boosted Trees
-Boosting improves weak models by sequential training.
+Gradient Boosting improves weak models by training them sequentially to correct errors from previous iterations.
 ```python
 from pyspark.ml.classification import GBTClassifier
 
