@@ -72,6 +72,9 @@ Run the publish command:
 ```bash
 mosquitto_pub -h localhost -t <ayaoraby> -m "hello"
 ```
+Or 
+From MQTT 127.0.0.1
+Publish the message on port 
 
 ---
 
